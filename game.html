@@ -2,10 +2,10 @@
 
 <html>
 <head>
-  <title>Warren Run</title>
+  <title>Run</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
   <link href="css/fonts.css" rel="stylesheet" type="text/css" />
-  <link href="css/warrenrun.css" rel="stylesheet" type="text/css" />
+  <link href="css/run.css" rel="stylesheet" type="text/css" />
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=0.5, maximum-scale=0.5, user-scalable=no" />
   <meta http-equiv="x-ua-compatible" content="IE=edge" />
   <script>
@@ -61,9 +61,9 @@
 <body> 
 
   <div id="intro">
-    <h1>Warren Run</h1>
-    <p>Eat carrots and get a multiplier in warrens.</p>
-    <p>Dodge obstacles and bullets and don't get caught!</p>
+    <h1>Run</h1>
+    <p>Collect health.</p>
+    <p>Dodge obstacles and don't run out of health!</p>
     <ul id="control-instructions">
       <li class="left"><span></span>Left</li>
       <li class="right"><span></span>Right</li>
@@ -119,11 +119,11 @@
           </span>
         </span>
       </span>
-      <span id="multiplier">multiplier x <span id="multiplier_value" class="value">1</span></span>
+      <!-- <span id="multiplier">multiplier x <span id="multiplier_value" class="value">1</span></span> -->
       <span id="points">Points <span id="points_value" class="value">0</span></span>
-      <span id="health">Health <span id="health_value" class="value">100</span></span>
+      <span id="health">Health <meter id="health_value" min="0" max="100" value="100" class="value">100</span></span>
       <ul id="lives"><li></li><li></li></ul>
-      <span id="current_stress" class="hud"><span id="pulse">0.0</span></span>
+      <!-- <span id="current_stress" class="hud"><span id="pulse">0.0</span></span> -->
     </div>
     <canvas id="canvas">
       Sorry, this game cannot be run because your browser does not support the &lt;canvas&gt; element

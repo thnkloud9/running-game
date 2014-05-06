@@ -36,7 +36,6 @@
     var defaultHandSpeed    = 2400;
     var handSpeed           = 2400;
     var bulletSpeed         = 10;
-    var multiplierTimeout   = 500;
 
     // keys
     var keyLeft        = false;
@@ -58,13 +57,13 @@
     var end = false;
     var stop = false;
     var shot = 0;
-    var chasing = false;
     var caught = false;
     var outOfTime = false;
     var currentLane = 0;
+    var health = 100;
+    var maxHealth = 100;
 
     var points = 0;
-    var multiplier = 0;
     var timer = 61;
     var countingDown = false;
     var skipFire = 0;
@@ -89,16 +88,13 @@
     function countDown() {
         if (!paused){
           timer = timer - 1;
-          // console.log('counting down 1');
 
           if (timer === 0) {
             if (practiseState === true) {
               pauseGame();
-              chasing = false;
               restartGame();
             } else {
               outOfTime = true;
-              chasing = true;
               Dom.hide('inHoleText');
               Dom.show('timesUp');
               gameOver('out of time');
@@ -146,7 +142,6 @@
         setTimeout(function(){
           startCountEl.style.display = 'none';
           paused = false;
-          chasing = true;
         }, 3000);
         clearInterval(countingDown)
         countingDown = false;
@@ -184,8 +179,6 @@
       $lives.childNodes[0].className = '';
       points = 0;
       Dom.set('points_value', 0);
-      multiplier = 0;
-      Dom.set('multiplier_value', 0);
       clearInterval(doCD);
       doCD = false;
       clearInterval(countingDown);
@@ -228,14 +221,10 @@
       var startPosition = position;
 
       speed = speed + 10;
+      //maxSpeed = maxSpeed + 10;
       defaultSpeed = defaultSpeed + 10;
       handSpeed = handSpeed + 1;
       defaultHandSpeed = defaultHandSpeed + 1;
-
-      // needs to be outside of the rest of the update so the end animation happens
-      if (chasing) {
-        updateChasers(dt, playerSegment, playerW);
-      }
 
       if (resetGame) {
         playerX = 0;
@@ -378,7 +367,6 @@
         // off road obsticals 
         if ((playerX < -1) || (playerX > 1)) {
 
-
           for(n = 0 ; n < playerSegment.sprites.length ; n++) {
             sprite  = playerSegment.sprites[n];
             spriteW = sprite.source.w * SPRITES.SCALE;
@@ -406,6 +394,7 @@
                 position = Util.increase(playerSegment.p1.world.z, -playerZ, trackLength);
                 if ((playerState === "running") || (playerState == "hit"))
                   playerState = "hit";
+                  health = health - 1;
               }
             }
 
@@ -417,13 +406,11 @@
                 inHole = false;
                 showHand = false;
               } else {
-                // start timer for multiple incremental
                 if (!inHole) {
-                  inHole = setInterval(function() {
-                    Dom.set('multiplier_value', Math.abs(Dom.get('multiplier_value').innerHTML) + 1);
-                  }, multiplierTimeout);
+                  // whatever you want to do when you leave the hole
                   Dom.hide('inHoleText');
                 } else {
+                  // whatever you want to do in the hole
                   stop = true;
                 }
               }
@@ -434,6 +421,7 @@
               // add points 
               sprite.source = { x:  0, y:  0, w: 0, h: 0 };
               Dom.set('points_value', Math.abs(Dom.get('points_value').innerHTML) + 100);
+              health = health + 0.10;
             }
 
             // gold carrot collision 
@@ -441,6 +429,7 @@
               // add points 
               sprite.source = { x:  0, y:  0, w: 0, h: 0 };
               Dom.set('points_value', Math.abs(Dom.get('points_value').innerHTML) + 500);
+              health = health + 1;
             }
 
             // stump collision
@@ -453,6 +442,7 @@
                 position = Util.increase(playerSegment.p1.world.z, -playerZ, trackLength);
                 if ((playerState === "running") || (playerState == "hit"))
                   playerState = "hit";
+                  health = health - 1;
               }
             }
             break;
@@ -461,45 +451,10 @@
 
         playerX = Util.limit(playerX, -'.75', '.75');     // dont ever let it go too far out of bounds
         speed   = Util.limit(speed, 0, maxSpeed); // or exceed maxSpeed
-      }
-    }
-
-    //-------------------------------------------------------------------------
-
-    function updateChasers(dt, playerSegment, playerW) {
-      var n, chaser, oldSegment, newSegment;
-      for(n = 0 ; n < chasers.length ; n++) {
-        chaser         = chasers[n];
-        oldSegment  = findSegment(chaser.z);
-        chaser.offset  = 0.75;
-        // keep hand just behind player
-        if (oldSegment.index < (playerSegment.index - 5)) {
-            handSpeed = defaultSpeed;
-        } else {
-            // if we are running, run away from hand faster than normal
-            if (speed == defaultSpeed) {
-                handSpeed = Math.round(defaultSpeed / 2);
-            } else {
-                handSpeed = defaultHandSpeed;
-            }
-            if ((outOfTime) || (caught)) {
-                handSpeed = 12000;
-            }
-        }
-
-        chaser.z       = Util.increase(chaser.z, dt * handSpeed, trackLength);
-        chaser.percent = Util.percentRemaining(chaser.z, segmentLength); // useful for interpolation during rendering phase
-        newSegment  = findSegment(chaser.z);
-        if (oldSegment != newSegment) {
-          index = oldSegment.chasers.indexOf(chaser);
-          oldSegment.chasers.splice(index, 1);
-          newSegment.chasers.push(chaser);
-        }
-
-        var health = (playerSegment.index + 70) - newSegment.index;
         Dom.set('health_value', health);
+        Dom.valueSet('health_value', health);
 
-        if (newSegment.index > (playerSegment.index + 70)) {
+        if (health < 1) {
           caught = true;
           gameOver('caught');
         }
@@ -595,60 +550,6 @@
         }
       }
 
-      // farmer must be drawn over player
-      var $lives = Dom.get("lives");
-      for(n = 55; n > 0 ; n--) {
-        segment = segments[(baseSegment.index + n) % segments.length];
-        for(i = 0 ; i < segment.sprites.length ; i++) {
-          sprite      = segment.sprites[i];
-          spriteScale = segment.p1.screen.scale;
-
-          // farmer
-          if ((sprite.source == SPRITES.FARMER)) {
-            var fire = Render.farmer(ctx, sprites, sprite.source, spriteScale);
-            if ((fire) && (!end)) {
-              var resetFarmer = (n === 1) ? true : false;
-              var bulletHit = Render.bullet(ctx, sprites, SPRITES.BULLET, bulletSpeed, resetFarmer);
-              if (bulletHit) {
-                // check if player is ducking
-                if ((playerState === "duckdown") || (playerState === "duckup")) {
-                  // add points? 
-                } else {
-                  //stop
-                  speed = maxSpeed/5;
-                  position = Util.increase(playerSegment.p1.world.z, -playerZ, trackLength);
-                  shot++;
-                  stop = true;
-                  if (playerState != 'hit') {
-                    playerDest = 0;
-                    playerAir = 0;
-                    playerState = "hit";
-                  }
-                  // lives
-                  if (shot === 1) {
-                    $lives.childNodes[1].className = 'dead';
-                    setTimeout(function() {
-                      stop = false;
-                      playerAir = 0;
-                      playerDest = 0;
-                      playerState = "running";
-                    }, 500);
-                  }
-                  if (shot === 2) {
-                    $lives.childNodes[0].className = 'dead';
-                    // reset the farmer and bullet animation
-                    resetFarmer = true;
-                    Render.bullet(ctx, sprites, SPRITES.BULLET, bulletSpeed, resetFarmer);
-                    gameOver('bullet hit');
-                  }
-                }
-              }
-            }
-          }
-
-        }
-      }
-
       // hole sprites must cover every other sprite except hand
       if (inHole) {
         // draw hearts on black background
@@ -657,16 +558,6 @@
         Dom.show('inHoleText');
       }
 
-      // hand needs less frames to finish 
-      for(n = 0 ; n < (drawDistance+100) ; n++) {
-        segment = segments[(baseSegment.index + n) % segments.length];
-        // render chasing hand
-        for(i = 0 ; i < segment.chasers.length ; i++) {
-          chaser = segment.chasers[i];
-          sprite = chaser.sprite;
-          Render.hand(ctx, sprites, sprite, n, caught);
-        }
-      }
     }
 
     function findSegment(z) {
@@ -910,20 +801,12 @@
                 Dom.set('preScore', Math.abs(Math.abs(Dom.get('preScore').innerHTML) + 1));
               }, 500);
             }
-            // count up multipler
-            multiplier = Math.abs(Dom.get('multiplier_value').innerHTML);
-            for (n=0;n<multiplier;n++) {
-              setTimeout(function() {
-                Dom.set('multiScore', Math.abs(Dom.get('multiScore').innerHTML) + 1);
-              }, 1000);
-            }
             // set post score
             setTimeout(function() {
-              Dom.set('postScore', Math.abs(points * multiplier));
+              Dom.set('postScore', Math.abs(points * 1));
             }, 2000);
           }, 4000);
         } else {
-          chasing = false;
           setTimeout(function(){
             restartGame();
           }, 3000);
@@ -937,24 +820,6 @@
     //=========================================================================
 
     //=========================================================================
-    var $pulse                = Dom.get("pulse");
-    var a                     = 0;
-    // wanna see the rabbit have a heart attack?
-    // unset the rate with
-    // clearInterval(pulsePos);
-    // and set the int pulseRate as the new value - the lower it is the faster the pulse goes.
-    var pulseRate             = 50;
-    var pulsePosX             = null;
-    var pulsePos = setInterval(function(){
-      if (a > 118) {
-        a = 0;
-      } else {
-        a = a + 1;
-      }
-      pulsePosX = a;
-      $pulse.style.backgroundPosition = "-" + pulsePosX + "px center";
-    }, pulseRate);
-
     var $hand = Dom.get("hand");
     var $timer = Dom.get("remaining_time");
     var $clock1 = Dom.get("clock-1");

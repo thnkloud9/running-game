@@ -6,6 +6,7 @@ var Dom = {
 
   get:  function(id)                     { return ((id instanceof HTMLElement) || (id === document)) ? id : document.getElementById(id); },
   set:  function(id, html)               { Dom.get(id).innerHTML = html;                        },
+  valueSet:  function(id, html)          { Dom.get(id).value = html;                        },
   on:   function(ele, type, fn, capture) { Dom.get(ele).addEventListener(type, fn, capture);    },
   un:   function(ele, type, fn, capture) { Dom.get(ele).removeEventListener(type, fn, capture); },
   show: function(ele, type)              { Dom.get(ele).style.display = (type || 'block');      },
@@ -411,79 +412,6 @@ var Render = {
 
   },
 
-  farmer: function(ctx, sprites, sprite, scale) {
-    var destW  = (sprite.w * 0.001 * width/2) * (SPRITES.SCALE * roadWidth);
-    var destH  = (sprite.h * 0.001 * width/2) * (SPRITES.SCALE * roadWidth);
-    var destY = ((height - destH) + 30);
-
-    if (scale > 0.000050) {
-      destX = (scale * 10000) - 150;
-    } else {
-      destX = (((scale * 100000) + 3) - 230);
-    }
-
-    if (destX > -Math.abs(200)) {
-      destX = -70;
-      ctx.drawImage(sprites, sprite.x, sprite.y, sprite.w, sprite.h, destX, destY, destW, destH);
-      return true;
-    } else {
-      ctx.drawImage(sprites, sprite.x, sprite.y, sprite.w, sprite.h, destX, destY, destW, destH);
-      return false;
-    }
-
-  },
-
-  bulletFrame: 0,
-  bulletFrameStep: 0,
-  bulletFrameRate: 4,
-  bulletStep: 0,
-  bulletX: 60,
-  bulletHit: false,
-  bullet: function(ctx, sprites, sprite, speed, reset) {
-    var frames = sprite.length;
-    if (this.bulletFrame == this.bulletFrameRate) {
-        this.bulletFrameStep++;
-        if (this.bulletFrameStep == 4) {
-            this.bulletFrameStep = 0;
-        }
-        this.bulletFrame = 0;
-    } else {
-        this.bulletFrame++;
-    }
-    this.bulletStep++;
-    sprite = sprite[this.bulletFrameStep];
-    var destW  = sprite.w;
-    var destH  = sprite.h;
-    var destY = (height - (210 * 0.001 * width/2) * (SPRITES.SCALE * roadWidth));
-    // reset for next bullet animation
-    if (reset) {
-        this.bulletStep = 0;
-        this.bulletX = 60;
-        this.bulletHit = false;
-        return false;
-    }
-
-    this.bulletX += speed;
-    var destX = this.bulletX;
-    // see if we hit the rabbit
-    var hitStart = (Math.abs(width / 2) - 60);
-    var hitEnd = (Math.abs(width / 2) + 60);
-
-    if ((destX >= hitStart) && (destX <= hitEnd)) {
-      ctx.drawImage(sprites, sprite.x, sprite.y, sprite.w, sprite.h, destX, destY, destW, destH);
-      if (this.bulletHit) {
-        return false;
-      } else {
-        this.bulletHit = true;
-        return true;
-      }
-    } else {
-      ctx.drawImage(sprites, sprite.x, sprite.y, sprite.w, sprite.h, destX, destY, destW, destH);
-      return false;
-    }
-
-  },
-
   heartsFrame: 0,
   heartsFrameStep: 0,
   heartsFrameRate: 16,
@@ -506,35 +434,6 @@ var Render = {
     var destH  = sprite.h;
 
     ctx.drawImage(sprites, sprite.x, sprite.y, sprite.w, sprite.h, destX, destY, destW, destH);
-  },
-
-  handX: 0,
-  handY: 0,
-  hand: function(ctx, sprites, sprite, percent, caught) {
-    var handW  = (sprite.w * 0.001 * width/2) * (SPRITES.SCALE * roadWidth)
-    var handH  = (sprite.h * 0.001 * width/2) * (SPRITES.SCALE * roadWidth)
-    var maxY = (height - handH);
-
-    if (caught) {
-      var minX = ((width/2) - (sprite.w/2));
-      // load grab sprite
-      // animate grabbing action
-      handX = (handX - 7);
-      handY = (handY + 1);
-      if (handX < minX) {
-        handX = minX;
-        handY = (handY + 15);
-      }
-    } else {
-      handY = (height - (handH * (percent / 100)));
-      handX = ((width / 2) + (handW / 2));
-    }
-
-    if (handY < maxY)
-      handY = maxY;
-
-    ctx.drawImage(sprites, sprite.x, sprite.y, sprite.w, sprite.h, handX, handY, handW, handH);
-
   },
 
   //---------------------------------------------------------------------------
