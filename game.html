@@ -1,0 +1,144 @@
+<!DOCTYPE html> 
+
+<html>
+<head>
+  <title>Warren Run</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="css/fonts.css" rel="stylesheet" type="text/css" />
+  <link href="css/warrenrun.css" rel="stylesheet" type="text/css" />
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=0.5, maximum-scale=0.5, user-scalable=no" />
+  <meta http-equiv="x-ua-compatible" content="IE=edge" />
+  <script>
+    window.onerror = function(error) {
+        alert(error);
+    };
+    // set full screen mode (iphone)
+    if (parent.document) {
+      var screenWidth = parent.document.documentElement.clientWidth;
+      var screenHeight = parent.document.documentElement.clientHeight;
+    } else {
+      var screenWidth = document.documentElement.clientWidth;
+      var screenHeight = document.documentElement.clientHeight;
+    }
+
+    var width = screenWidth;
+    var height = screenHeight;
+
+    function hideAddressBar() {
+      // this only works if the height of the page is larger than screen
+      setTimeout(function(){ window.scrollTo(0, 1); }, 50 );
+      if (screenHeight > screenWidth) {
+        Dom.show('rotate');
+        pause = true;
+      } else {
+        setTimeout(function() {
+        Dom.hide('rotate');
+        if((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)) || (navigator.userAgent.match(/iPad/i))){
+          var retina = window.devicePixelRatio > 1;
+          if (retina) {
+            width = (parent.screen.height * 2);
+            height = (parent.screen.width * 2);
+          } else {
+            width = (parent.screen.height);
+            height = (parent.screen.width);
+          }
+        } else {
+          width = screenWidth;
+          height = screenHeight;
+        }
+        document.body.setAttribute("style", "width: " + width + "; height: " + height + ";");
+        reset();
+        pause = false;
+        }, 500);
+      }
+    }
+
+    window.addEventListener("load", function(){ if(!window.pageYOffset){ hideAddressBar(); } } );
+    window.addEventListener("orientationchange", hideAddressBar);
+  </script>
+</head> 
+
+<body> 
+
+  <div id="intro">
+    <h1>Warren Run</h1>
+    <p>Eat carrots and get a multiplier in warrens.</p>
+    <p>Dodge obstacles and bullets and don't get caught!</p>
+    <ul id="control-instructions">
+      <li class="left"><span></span>Left</li>
+      <li class="right"><span></span>Right</li>
+      <li class="duck"><span></span>Duck</li>
+      <li class="jump"><span></span>Jump</li>
+    </ul>
+    <p id="percent">100%</p>
+    <p id="practise">Practise</p>
+    <p id="play">Play</p>
+  </div>
+
+  <div id="rotate">
+
+  </div>
+
+  <div id="score">
+    <h1>Results</h1>
+    <dl>
+      <dt>Score</dt>
+        <dd id="preScore">0</dd>
+      <dt>Multiplier</dt>
+        <dd>x<span id="multiScore">0</span></dd>
+      <dt>Total Bet</dt>
+        <dd><span id="totalBet">0</span></dd>
+      <dt id="multiplier-title">Bonus Multiplier</dt>
+        <dd id="multiplier-score">10</dd>
+      <dt>Total Winnings</dt>
+        <dd id="postScore">0</dd>
+    </dl>
+    <span></span>
+  </div>
+
+  <!-- random junk ket here so it doesn't just spill out everywhere -->
+  <div>
+    <p id="inHoleText"><span></span></p>
+    <p id="timesUp">Time's Up!</p>
+    <p id="tapToStart"><span></span></p>
+    <p id="countDown"></p>
+  </div>
+
+  <div id="racer">
+    <div id="hud">
+      <span id="remaining_time"   class="hud"><span>0.0</span>
+        <span class="hand" id="hand"></span>
+        <span class="pie" id="clock-1">
+          <span>
+            <span></span>
+          </span>
+        </span>
+        <span class="pie">
+          <span id="clock-2">
+            <span></span>
+          </span>
+        </span>
+      </span>
+      <span id="multiplier">multiplier x <span id="multiplier_value" class="value">1</span></span>
+      <span id="points">Points <span id="points_value" class="value">0</span></span>
+      <span id="health">Health <span id="health_value" class="value">100</span></span>
+      <ul id="lives"><li></li><li></li></ul>
+      <span id="current_stress" class="hud"><span id="pulse">0.0</span></span>
+    </div>
+    <canvas id="canvas">
+      Sorry, this game cannot be run because your browser does not support the &lt;canvas&gt; element
+    </canvas>
+    Loading...
+  </div>
+
+  <audio id='music'>
+  </audio>
+  <span id="mute"></span>
+  <script>
+      document.getElementById('countDown').style.lineHeight = height + 'px';
+  </script>
+  <script src="js/common.js"></script>
+  <script src="js/game.js"></script>
+
+</body> 
+</html>

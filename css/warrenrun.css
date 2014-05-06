@@ -1,0 +1,448 @@
+
+/****************************************/
+/* common styles used for v1 through v4 */
+/****************************************/
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  -ms-touch-action: none;
+  }
+#canvas {
+  position: absolute;
+  z-index: 0;
+  background-color: #72D7EE;
+  width: 100%;
+  height: 100%;
+  -ms-touch-action: none;
+  }
+  /* intro */
+#intro {
+  display: block;
+  background: url(../images/clouds.png) center center repeat #a6c7e6;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  text-align: center;
+  }
+  #intro h1 {
+    font-size: 100px;
+    margin: 0 0 -10px;
+    padding: 0;
+    line-height: 100px;
+    font-family: Conv_JELLYBELLY;
+    text-shadow: 0 0 10px #000, 0 0 10px #000, 0 0 10px #000;
+    text-transform: uppercase;
+    color: #ffff00;
+    }
+  #intro p {
+    color: #ffff00;
+    font-family: VAGRoundedLTThinBold;
+    font-size: 36px;
+    margin: 0 40px;
+    text-shadow: 0 2px 3px #000;
+    -webkit-text-stroke: 2px #000;
+    }
+  #control-instructions {
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    z-index: 100;
+    margin: 0;
+    padding: 0;
+    }
+    #control-instructions li {
+      position: relative;
+      width: 20%;
+      display: inline-block;
+      color: #ffff00;
+      font-family: VAGRoundedLTThinBold;
+      font-size: 36px;
+      text-shadow: 0 3px 5px #000;
+      -webkit-text-stroke: 2px #000;
+      margin: -50px 0 0;
+      padding: 0;
+      text-align: center;
+      }
+      #control-instructions li span {
+        display: block;
+        background: url(../images/arrows.png) 0 center no-repeat transparent;
+        margin: 0 auto 22px;
+        height: 118px;
+        width: 117px;
+        }
+    #control-instructions li.left span {
+      background-position: 0 center;
+      }
+    #control-instructions li.right span {
+      background-position: -254px center;
+      }
+    #control-instructions li.duck span {
+      background-position: -508px center;
+      }
+    #control-instructions li.jump span {
+      background-position: -728px center;
+      }
+    #intro #play {
+      background: url(../images/sprites.png) -608px -1907px no-repeat transparent;
+      position: absolute;
+      right: 20px;
+      bottom: 20px;
+      height: 74px;
+      width: 201px;
+      text-indent: -10000em;
+      overflow: hidden;
+      margin: 0;
+      z-index: 100;
+      }
+    #intro #practise {
+      background: url(../images/sprites.png) -608px -1835px no-repeat transparent;
+      position: absolute;
+      left: 20px;
+      bottom: 20px;
+      height: 74px;
+      width: 308px;
+      text-indent: -10000em;
+      overflow: hidden;
+      margin: 0;
+      z-index: 100;
+      }
+    #intro #percent {
+      position: absolute;
+      left: 0;
+      right: 0;
+      text-align: center;
+      bottom: 22px;
+      font-family: Conv_JELLYBELLY;
+      text-shadow: none;
+      color: #fff;
+      font-size: 48pt;
+      margin: 0;
+      z-index: 50;
+      }
+
+#rotate {
+  display: none;
+  background: url(../images/rotate.png) center center no-repeat #012136;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  }
+/* misc */
+#inHoleText {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  z-index: 1000;
+  }
+  #inHoleText span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 750px;
+    height: 103px;
+    margin: -51px 0 0 -375px;
+    color: transparent;
+    background: url(../images/sprites.png)  -949px -1879px no-repeat transparent;
+    z-index: 0;
+    }
+#timesUp {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 559px;
+  height: 103px;
+  margin: -51px 0 0 -280px;
+  color: transparent;
+  background: url(../images/sprites.png)  -949px -1756px no-repeat transparent;
+  z-index: 1000;
+  }
+#countDown {
+  background: rgba(0, 0, 0, .35);
+  display: none;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  text-shadow: 5px 5px 0 #000;
+  color: #fff;
+  z-index: 1000;
+  font-family: callMeMaybe;
+  font-size: 6em;
+  padding: 0;
+  margin: 0;
+  }
+#tapToStart {
+  background: rgba(0, 0, 0, .35);
+  display: none;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-shadow: 5px 5px 0 #000;
+  color: #fff;
+  z-index: 1000;
+  padding: 0;
+  margin: 0;
+  }
+  #tapToStart span {
+    background: url(../images/sprites.png) -1000px -577px  no-repeat;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    height: 108px;
+    width: 880px;
+    margin: -59px 0 0 -440px;
+    z-index: 0;
+    }
+
+#score {
+  display: none;
+  background: #000;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 100;
+  }
+  /* lady rabbit */
+  #score > span {
+    background: url(../images/sprites.png) -1850px -1605px no-repeat transparent;
+    position: absolute;
+    width: 198px;
+    height: 442px;
+    left: 100px;
+    top: 50%;
+    margin: -221px 0 0;
+    }
+  #score h1 {
+    position: absolute;
+    right: 20px;
+    left: 300px;
+    color: #fff;
+    font-family: callMeMaybe;
+    font-weight: normal;
+    text-align: center;
+    text-shadow: 0 0 50px #5b358c, 0 0 50px #5b358c, 0 0 50px #5b358c;
+    font-size: 70px;
+    margin: 0;
+    }
+  #score dl {
+    position: absolute;
+    top: 110px;
+    left: 300px;
+    right: 20px;
+    color: #fff;
+    font-family: callMeMaybe;
+    font-size: 300%;
+    text-align: center;
+    line-height: 70px;
+    margin: 0;
+    }
+    #score dt {
+      width: 40%;
+      clear: left;
+      float: left;
+      margin: 0;
+      padding: 0;
+      white-space: nowrap;
+      }
+/*      #score #multiplier-title {
+        width: 100%;
+        }
+      #score #multiplier-score {
+        font-size: 200%;
+        }
+*/    #score dd {
+      color: #f7ec14;
+      margin: 0;
+      padding: 0;
+      }
+
+/* lives */
+#lives {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  right: 120px;
+  }
+  #lives li {
+    background: url(../images/sprites.png) -10px -1940px no-repeat transparent;
+    display: inline-block;
+    width: 22px;
+    height: 62px;
+    margin: 0 0 0 10px;
+    }
+  #lives li.dead {
+    background-position: -43px -1940px;
+    }
+
+/**************************************************/
+/* rudimentary heads up display (only used in v4) */
+/**************************************************/
+
+#hud {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 62px;
+  line-height: 62px;
+  z-index: 1;
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 0.8em;
+  color: black;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  }
+
+#controls,
+#instructions,
+#current_lap_time {
+  display: none!important;
+  }
+#remaining_time,
+#current_stress {
+  background: url(../images/sprites.png) -207px -1902px no-repeat transparent;
+  position: absolute;
+  height: 88px;
+  width: 88px;
+  border-radius: 88px;
+  border: none;
+  padding: 0;
+  margin: 0;
+  box-shadow: 0 0 3px #000;
+  overflow: hidden;
+  }
+#current_stress {
+  left: 11px;
+  }
+#remaining_time {
+  right: 11px;
+  }
+  #hud #current_stress span,
+  #hud #remaining_time span {
+    text-indent: -1000px;
+    border: none!important;
+    margin: 0!important;
+    padding: 0!important;
+    }
+  #current_stress span {
+    background: url(../images/pulse.png) 0 center repeat-x #3b0d0f;
+    position: absolute;
+    left: 1px;
+    top: 1px;
+    width: 86px;
+    height: 86px;
+    /*line-height: auto;*/
+    z-index: -1;
+    border-radius: 86px;
+    }
+  #remaining_time > span {
+    background: url(../images/sprites.png) -467px -1903px no-repeat transparent!important;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    /*line-height: auto;*/
+    z-index: -1;
+    }
+  #remaining_time .hand {
+    background: url(../images/sprites.png) -295px -1903px no-repeat transparent!important;
+    z-index: 2;
+    /*-webkit-animation: rotate 60s 1 linear;*/
+    }
+    #remaining_time .pie {
+      background: none!important;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 88px;
+      height: 88px;
+      z-index: -1;
+      overflow: hidden;
+      }
+    #remaining_time .pie > span {
+      /*-webkit-animation: rotate2 30s 1 linear;*/
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 88px;
+      height: 88px;
+      overflow: hidden;
+      }
+      #remaining_time .pie > span > span {
+        background: white;
+        position: absolute;
+        left: 50%;
+        top: 0;
+        width: 50%;
+        height: 100%;
+        border-radius: 0 88px 88px 0;
+        }
+    #remaining_time .pie + .pie {
+      left: -50%;
+      }
+      #remaining_time .pie + .pie > span {
+/*        -webkit-animation-delay: 30s;
+           -moz-animation-delay: 30s;
+                animation-delay: 30s;
+*/        left: 50%;
+        }
+        #remaining_time .pie + .pie > span > span {
+          left: 0;
+          border-radius: 88px 0 0 88px;
+          }
+  #hud #points,
+  #hud #health,
+  #hud #multiplier {
+    position: absolute;
+    top: -12px;
+    display: block;
+    font-family: "callMeMaybe";
+    font-size: 300%;
+    line-height: 50px;
+    color: #fff;
+    text-shadow: 2px 2px 0 #000;
+    margin: 0;
+    padding: 0;
+  }
+    #hud #points .value,
+    #hud #health .value,
+    #hud #multiplier .value {
+      position: relative;
+      top: 2px;
+      color: #ffff01;
+      font-size: 125%;
+      }
+  #points {
+    left: 50%;
+    }
+  #multiplier {
+    left: 20%;
+    }
+/* ms specific touch fixes */
+#canvas,
+#intro #play,
+#intro #practise,
+#inHoleText,
+#tapToStart {
+  -ms-touch-action: none;
+  }

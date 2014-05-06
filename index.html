@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=0.5, user-scalable=no" />
+    <meta http-equiv="x-ua-compatible" content="IE=edge" />
+    <script type="text/javascript">
+
+        function goToBonus(){
+            var iframe  = document.getElementById("nektan_bonus_game");
+            iframe.style.display = "block";
+            iframe.className = "playing";
+        }
+
+
+    </script>
+    <style type="text/css">
+        body{
+            background: #000000;
+        }
+        h1{
+            font-size: 72;
+            color: #ffffff;
+        }
+        #nektan_bonus_game {
+            background-color: rgb(101,92,68);
+            position: absolute;
+            top: 0; left: 0;
+            height: 100%;
+            width: 100%;
+            border: 0; margin: 0; padding: 0;
+            overflow: hidden;
+            display: none;
+            z-index: 100;
+        }
+        #nektan_bonus_game .playing {
+            display: block;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>MAIN GAME</h1>
+    <input type="button" value="GO TO BONUS GAME" onclick="goToBonus();" />
+    <iframe id="nektan_bonus_game" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" src="./game.html"></iframe>
+</body>
+</html>
