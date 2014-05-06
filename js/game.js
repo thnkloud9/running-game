@@ -1,4 +1,4 @@
-    var fps            = 60;                      // how many 'update' frames per second
+    var fps            = 80;                      // how many 'update' frames per second
     var step           = 1/fps;                   // how long is each frame (in seconds)
     var centrifugal    = 0;                       // centrifugal force multiplier when going around curves
     var skySpeed       = 0;                       // background sky layer scroll speed when going around curve (or up hill)
@@ -421,7 +421,7 @@
               // add points 
               sprite.source = { x:  0, y:  0, w: 0, h: 0 };
               Dom.set('points_value', Math.abs(Dom.get('points_value').innerHTML) + 100);
-              health = health + 0.10;
+              health = Math.min((health + 0.10), maxHealth);
             }
 
             // gold carrot collision 
@@ -429,7 +429,7 @@
               // add points 
               sprite.source = { x:  0, y:  0, w: 0, h: 0 };
               Dom.set('points_value', Math.abs(Dom.get('points_value').innerHTML) + 500);
-              health = health + 1;
+              health = Math.min((health + 1), maxHealth);
             }
 
             // stump collision
