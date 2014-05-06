@@ -1,4 +1,4 @@
-    var fps            = 80;                      // how many 'update' frames per second
+    var fps            = 240;                      // how many 'update' frames per second
     var step           = 1/fps;                   // how long is each frame (in seconds)
     var centrifugal    = 0;                       // centrifugal force multiplier when going around curves
     var skySpeed       = 0;                       // background sky layer scroll speed when going around curve (or up hill)
@@ -220,12 +220,6 @@
       var dx            = dt * 2 * speedPercent; // at top speed, should be able to cross from left to right (-1 to 1) in 1 second
       var startPosition = position;
 
-      speed = speed + 10;
-      //maxSpeed = maxSpeed + 10;
-      defaultSpeed = defaultSpeed + 10;
-      handSpeed = handSpeed + 1;
-      defaultHandSpeed = defaultHandSpeed + 1;
-
       if (resetGame) {
         playerX = 0;
         playerDest = 0;
@@ -272,9 +266,9 @@
             if ((playerState == "jumpup") && (playerAir <= playerDest)) {
               if (playerAir == playerDest)
                 playerState = "jumpdown";
-              playerAir = playerAir + 10;
+              playerAir = playerAir + 2;
             } else {
-              playerAir = playerAir - 10;
+              playerAir = playerAir - 2;
               playerState = "jumpdown";
             }
 
@@ -296,9 +290,9 @@
             if ((playerState == "duckdown") && (playerAir >= playerDest)) {
               if (playerAir == playerDest)
                 playerState = "duckup";
-              playerAir = playerAir - 10;
+              playerAir = playerAir - 2;
             } else {
-              playerAir = playerAir + 10;
+              playerAir = playerAir + 2;
               playerState = "duckup";
             }
 
@@ -354,6 +348,12 @@
         }
 
         if (!paused) {
+          // increase speed
+          speed = speed + 10;
+          defaultSpeed = defaultSpeed + 10;
+          handSpeed = handSpeed + 1;
+          defaultHandSpeed = defaultHandSpeed + 1;
+
           speed = defaultSpeed;
         } else {
           speed = 0;
@@ -394,7 +394,7 @@
                 position = Util.increase(playerSegment.p1.world.z, -playerZ, trackLength);
                 if ((playerState === "running") || (playerState == "hit"))
                   playerState = "hit";
-                  health = health - 1;
+                  health = health - .5;
               }
             }
 
@@ -442,7 +442,7 @@
                 position = Util.increase(playerSegment.p1.world.z, -playerZ, trackLength);
                 if ((playerState === "running") || (playerState == "hit"))
                   playerState = "hit";
-                  health = health - 1;
+                  health = health - .5;
               }
             }
             break;
@@ -451,6 +451,7 @@
 
         playerX = Util.limit(playerX, -'.75', '.75');     // dont ever let it go too far out of bounds
         speed   = Util.limit(speed, 0, maxSpeed); // or exceed maxSpeed
+        Dom.set('speed_value', speed);
         Dom.set('health_value', health);
         Dom.valueSet('health_value', health);
 
@@ -657,6 +658,12 @@
       addHill();
       addStraight();
       addLowRollingHills();
+      addLowRollingHills();
+      addCurve();
+      addStraight();
+      addHill();
+      addStraight();
+      addLowRollingHills();
 
       resetSprites();
       resetChasers();
@@ -670,20 +677,13 @@
     function resetSprites() {
       var n;
 
-      //for(n = 200 ; n < segments.length ; n += 200) {
-      //  addSprite(n, SPRITES.HAND, Util.randomChoice([-0.75,0.0,0.75]));
-      //}
-
       for(n = 10 ; n < segments.length-5; n += 2 ) {
         addSprite(n, SPRITES.FENCE_RIGHT, 1.8);
         addSprite(n, SPRITES.FENCE_LEFT, -1.8);
       }
 
-      // only add two farmers per game, he's kind of a dick
-      //addSprite(Util.randomChoice([70,125,265]), SPRITES.FARMER, -0.75);
-      //addSprite(Util.randomChoice([225,380,505]), SPRITES.FARMER, -0.75);
-
-      // add holes
+      // add gates and stumps
+      /*
       for(n = 30 ; n < segments.length ; n += 30) {
         addSprite(n,
             //Util.randomChoice([SPRITES.GATE, SPRITES.STUMP, SPRITES.HOLE]),
@@ -691,6 +691,7 @@
             Util.randomChoice([-0.75,0.0,0.75])
         );
       }
+      */
 
       // add carrots
       var shift = 0;

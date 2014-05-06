@@ -412,7 +412,7 @@ body {
           }
   #hud #points,
   #hud #health,
-  #hud #multiplier {
+  #hud #speed {
     position: absolute;
     top: -12px;
     display: block;
@@ -426,17 +426,20 @@ body {
   }
     #hud #points .value,
     #hud #health .value,
-    #hud #multiplier .value {
+    #hud #speed .value {
       position: relative;
       top: 2px;
       color: #ffff01;
       font-size: 125%;
       }
+  #health {
+    left: 1%;
+  }
   #points {
-    left: 50%;
+    left: 60%;
     }
-  #multiplier {
-    left: 20%;
+  #speed {
+    left: 31%;
     }
 /* ms specific touch fixes */
 #canvas,
