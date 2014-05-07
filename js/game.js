@@ -32,6 +32,10 @@
     var speed          = 0;                       // current speed
     var maxSpeed       = segmentLength/step;      // top speed (ensure we can't move more than 1 segment in a single frame to make collision detection easier)
 
+    var jumpSpeed      = 3;
+    var duckSpeed      = 3;
+    var turnSpeed      = 0.03;
+
     var defaultSpeed        = 2500;
     var defaultHandSpeed    = 2400;
     var chaserSpeed           = 2400;
@@ -268,9 +272,9 @@
             if ((playerState == "jumpup") && (playerAir <= playerDest)) {
               if (playerAir == playerDest)
                 playerState = "jumpdown";
-              playerAir = playerAir + 2;
+              playerAir = playerAir + jumpSpeed;
             } else {
-              playerAir = playerAir - 2;
+              playerAir = playerAir - jumpSpeed;
               playerState = "jumpdown";
             }
 
@@ -292,9 +296,9 @@
             if ((playerState == "duckdown") && (playerAir >= playerDest)) {
               if (playerAir == playerDest)
                 playerState = "duckup";
-              playerAir = playerAir - 2;
+              playerAir = playerAir - duckSpeed;
             } else {
-              playerAir = playerAir + 2;
+              playerAir = playerAir + duckSpeed;
               playerState = "duckup";
             }
 
@@ -312,7 +316,7 @@
             }
 
             if (playerX > playerDest) {
-              playerX = playerX - 0.02;
+              playerX = playerX - turnSpeed;
             } else {
               swipeLeft = false;
               currentLane--;
@@ -329,7 +333,7 @@
             }
 
             if (playerX < playerDest) {
-              playerX = playerX + 0.02;
+              playerX = playerX + turnSpeed;
             } else {
               swipeRight = false;
               currentLane++;
@@ -351,8 +355,8 @@
 
         if (!paused) {
           // increase speed
-          speed = speed + 10;
-          defaultSpeed = defaultSpeed + 10;
+          speed = speed + 5;
+          defaultSpeed = defaultSpeed + 5;
 
           chaserSpeed = chaserSpeed + 1;
           defaultHandSpeed = defaultHandSpeed + 1;
@@ -427,7 +431,7 @@
             if (sprite.source == SPRITES.CARROT) {
               // add points 
               sprite.source = { x:  0, y:  0, w: 0, h: 0 };
-              Dom.set('points_value', Math.abs(Dom.get('points_value').innerHTML) + 100);
+              Dom.set('points_value', Math.abs(Dom.get('points_value').innerHTML) + 1);
               health = Math.min((health + 1), maxHealth);
             }
 
@@ -435,13 +439,13 @@
             if (sprite.source == SPRITES.GOLD_CARROT) {
               // add points 
               sprite.source = { x:  0, y:  0, w: 0, h: 0 };
-              Dom.set('points_value', Math.abs(Dom.get('points_value').innerHTML) + 500);
+              Dom.set('points_value', Math.abs(Dom.get('points_value').innerHTML) + 5);
               health = Math.min((health + 1), maxHealth);
 
               powerUp = true;
               setTimeout(function() {
                 powerUp = false;
-              }, 5000);
+              }, 3000);
 
             }
 
