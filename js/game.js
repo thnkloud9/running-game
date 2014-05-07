@@ -34,7 +34,7 @@
 
     var defaultSpeed        = 2500;
     var defaultHandSpeed    = 2400;
-    var handSpeed           = 2400;
+    var chaserSpeed           = 2400;
     var bulletSpeed         = 10;
 
     // keys
@@ -62,6 +62,8 @@
     var currentLane = 0;
     var health = 100;
     var maxHealth = 100;
+    var powerUp = false;
+    var powerDown = false;
 
     var points = 0;
     var timer = 61;
@@ -310,7 +312,7 @@
             }
 
             if (playerX > playerDest) {
-              playerX = playerX - 0.15;
+              playerX = playerX - 0.02;
             } else {
               swipeLeft = false;
               currentLane--;
@@ -327,7 +329,7 @@
             }
 
             if (playerX < playerDest) {
-              playerX = playerX + 0.15;
+              playerX = playerX + 0.02;
             } else {
               swipeRight = false;
               currentLane++;
@@ -351,7 +353,8 @@
           // increase speed
           speed = speed + 10;
           defaultSpeed = defaultSpeed + 10;
-          handSpeed = handSpeed + 1;
+
+          chaserSpeed = chaserSpeed + 1;
           defaultHandSpeed = defaultHandSpeed + 1;
 
           speed = defaultSpeed;
@@ -381,7 +384,11 @@
         // obstacles in road
         for(n = 0 ; n < playerSegment.sprites.length ; n++) {
           sprite  = playerSegment.sprites[n];
-          spriteW = sprite.source.w * SPRITES.SCALE;
+          if (typeof sprite.source.w == 'undefined') {
+            spriteW = sprite.source[0].w * SPRITES.SCALE;
+          } else { 
+            spriteW = sprite.source.w * SPRITES.SCALE;
+          }
           if (Util.overlap(playerX, playerW, sprite.offset + spriteW/2 * (sprite.offset > 0 ? 1 : -1), spriteW, 0.8)) {
 
             // gate collision 
@@ -394,7 +401,7 @@
                 position = Util.increase(playerSegment.p1.world.z, -playerZ, trackLength);
                 if ((playerState === "running") || (playerState == "hit"))
                   playerState = "hit";
-                  health = health - .5;
+                  health = health - .3;
               }
             }
 
@@ -421,7 +428,7 @@
               // add points 
               sprite.source = { x:  0, y:  0, w: 0, h: 0 };
               Dom.set('points_value', Math.abs(Dom.get('points_value').innerHTML) + 100);
-              health = Math.min((health + 0.10), maxHealth);
+              health = Math.min((health + 1), maxHealth);
             }
 
             // gold carrot collision 
@@ -430,6 +437,12 @@
               sprite.source = { x:  0, y:  0, w: 0, h: 0 };
               Dom.set('points_value', Math.abs(Dom.get('points_value').innerHTML) + 500);
               health = Math.min((health + 1), maxHealth);
+
+              powerUp = true;
+              setTimeout(function() {
+                powerUp = false;
+              }, 5000);
+
             }
 
             // stump collision
@@ -442,7 +455,7 @@
                 position = Util.increase(playerSegment.p1.world.z, -playerZ, trackLength);
                 if ((playerState === "running") || (playerState == "hit"))
                   playerState = "hit";
-                  health = health - .5;
+                  health = health - .3;
               }
             }
             break;
@@ -450,7 +463,14 @@
         }
 
         playerX = Util.limit(playerX, -'.75', '.75');     // dont ever let it go too far out of bounds
-        speed   = Util.limit(speed, 0, maxSpeed); // or exceed maxSpeed
+        if (powerUp) {
+          speed = maxSpeed;
+        } else if (powerDown) {
+          speed = 1000;
+          health = health - .10; 
+        } else {
+          speed = Util.limit(speed, 0, (maxSpeed / 2)); // or exceed half maxSpeed
+        }
         Dom.set('speed_value', speed);
         Dom.set('health_value', health);
         Dom.valueSet('health_value', health);
@@ -551,7 +571,7 @@
         }
       }
 
-      // hole sprites must cover every other sprite except hand
+      // hole sprites must cover every other sprite except chaser
       if (inHole) {
         // draw hearts on black background
         Render.polygon(ctx, 0, 0, 0, height, width, height, width, 0, COLORS.BLACK);
@@ -579,7 +599,7 @@
              p2: { world: { y: y,       z: (n+1)*segmentLength }, camera: {}, screen: {} },
           curve: curve,
         sprites: [],
-           chasers: [],
+          chasers: [],
           color: COLORS.DEFAULT
       });
     }
@@ -683,15 +703,18 @@
       }
 
       // add gates and stumps
-      /*
-      for(n = 30 ; n < segments.length ; n += 30) {
+      for(n = 30 ; n < segments.length ; n += 60) {
         addSprite(n,
             //Util.randomChoice([SPRITES.GATE, SPRITES.STUMP, SPRITES.HOLE]),
             Util.randomChoice([SPRITES.GATE, SPRITES.STUMP]),
             Util.randomChoice([-0.75,0.0,0.75])
         );
       }
-      */
+
+      // add golden carrots (power ups)
+      for(n = 30 ; n < segments.length ; n += 400) {
+        addSprite(n, SPRITES.GOLD_CARROT, Util.randomChoice([-0.75,0.0,0.75]));
+      }
 
       // add carrots
       var shift = 0;
@@ -704,7 +727,8 @@
         }
 
         addSprite((n - 6),
-            Util.randomChoice([SPRITES.CARROT, SPRITES.CARROT, SPRITES.GOLD_CARROT]),
+            //Util.randomChoice([SPRITES.CARROT, SPRITES.CARROT, SPRITES.GOLD_CARROT]),
+            Util.randomChoice([SPRITES.CARROT, SPRITES.CARROT]),
             position
         );
       }
@@ -719,7 +743,7 @@
         //z      = Math.floor(Math.random() * segments.length) * segmentLength;
         z      = segments.length;
         sprite = SPRITES.HAND;
-        speed  = handSpeed;
+        speed  = chaserSpeed;
         chaser = { offset: offset, z: z, sprite: sprite, speed: speed };
         segment = segments[segments.length - 1];
         segment.chasers.push(chaser);
